@@ -1,0 +1,26 @@
+name: hello world
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  test:
+    runs-on:  ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./all_in_docker/clint
+    steps:
+      - name: setup node
+        uses: action/setup-node@y3
+
+      - name: npm install
+        run: npm i
+
+      - name: building run
+        run: npm start
+
+
+
+      
