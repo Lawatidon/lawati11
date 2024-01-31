@@ -6,20 +6,31 @@ on:
     - main
 
 jobs:
-  test:
+  build:
     runs-on:  ubuntu-latest
     defaults:
       run:
-        working-directory: ./all_in_docker/clint
+        working-directory: all_in_docker/clint
     steps:
-      - name: setup node
-        uses: action/setup-node@y3
+      - name: checkout repo
+        uses: actions/checkout@v2
 
-      - name: npm install
-        run: npm i
+      - name: Setup SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: building run
-        run: npm start
+      - name: executing remote ssh commands using passwordss
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            whoami
+            
+      
 
 
 
